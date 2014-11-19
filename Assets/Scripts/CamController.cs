@@ -6,9 +6,14 @@ public class CamController : MonoBehaviour {
     private Transform playerTransform;
     private Vector3 offset;
     private Transform myTransform;
+    private bool paused;
 
     void Awake()
     {
+        if (!networkView.isMine)
+        {
+            Destroy(gameObject);
+        }
         myTransform = GetComponent<Transform>();
         playerTransform = transform.parent.transform;
         offset = myTransform.position - playerTransform.position;
@@ -31,21 +36,29 @@ public class CamController : MonoBehaviour {
 
     void PanWithMouse()
     {
-        if (InputSettings.mousePosition.x > Screen.width - 20)
+        if (!paused)
         {
-            myTransform.position += new Vector3(1,0,0);
+            if (InputSettings.mousePosition.x > Screen.width - 20)
+            {
+                myTransform.position += new Vector3(1, 0, 0);
+            }
+            else if (InputSettings.mousePosition.x < 20)
+            {
+                myTransform.position += new Vector3(-1, 0, 0);
+            }
+            else if (InputSettings.mousePosition.y < 20)
+            {
+                myTransform.position += new Vector3(0, 0, -1);
+            }
+            else if (InputSettings.mousePosition.y > Screen.height - 20)
+            {
+                myTransform.position += new Vector3(0, 0, 1);
+            } 
         }
-        else if (InputSettings.mousePosition.x < 20)
-        {
-            myTransform.position += new Vector3(-1, 0, 0);
-        }
-        else if (InputSettings.mousePosition.y < 20)
-        {
-            myTransform.position += new Vector3(0, 0, -1);
-        }
-        else if (InputSettings.mousePosition.y > Screen.height - 20)
-        {
-            myTransform.position += new Vector3(0, 0, 1);
-        }
+    }
+
+    void OnApplicationFocus(bool focusStatus)
+    {
+        paused = !focusStatus;
     }
 }

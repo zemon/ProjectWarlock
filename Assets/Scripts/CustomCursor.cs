@@ -1,15 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class CustomCursor : MonoBehaviour {
 
-    public RectTransform cursorPosition;
+    private RectTransform cursorPosition;
+
+    public GameObject inGame;
+    public GameObject gameLobby;
+    public GameObject mainMenu;
+
+    public Button btn_CreateGame;
+    public Button btn_RefreshServerlist;
+    public InputField inputfield_EnterName;
 
     void Awake()
     {
         cursorPosition = GetComponent<RectTransform>();
-        Screen.lockCursor = true;
-        Screen.showCursor = false;
     }
 
     void Start()
@@ -20,16 +27,28 @@ public class CustomCursor : MonoBehaviour {
 	// Update is called once per frame
     void Update()
     {
-        InputSettings.mousePosition.x += Input.GetAxisRaw("Mouse X");
-        InputSettings.mousePosition.x = Mathf.Clamp(InputSettings.mousePosition.x, 0, Screen.width);
-        InputSettings.mousePosition.y += Input.GetAxisRaw("Mouse Y");
-        InputSettings.mousePosition.y = Mathf.Clamp(InputSettings.mousePosition.y, 0, Screen.height);
+        if (mainMenu.activeSelf || gameLobby.activeSelf)
+        {
+            InputSettings.mousePosition = Input.mousePosition;
+        }
+        else
+        {
+            InputSettings.mousePosition.x += Input.GetAxisRaw("Mouse X");
+            InputSettings.mousePosition.x = Mathf.Clamp(InputSettings.mousePosition.x, 0, Screen.width);
+            InputSettings.mousePosition.y += Input.GetAxisRaw("Mouse Y");
+            InputSettings.mousePosition.y = Mathf.Clamp(InputSettings.mousePosition.y, 0, Screen.height);
+        }
         cursorPosition.anchoredPosition = InputSettings.mousePosition;
-        
-
 	}
 
-
+    void OnApplicationFocus(bool focusStatus)
+    {
+        if (inGame.activeSelf)
+        {
+            Screen.showCursor = false;
+            Screen.lockCursor = true;
+        }
+    }
 
     void OnGUI()
     {
