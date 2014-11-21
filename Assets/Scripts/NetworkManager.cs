@@ -111,7 +111,7 @@ public class NetworkManager : MonoBehaviour {
 
     public IEnumerator RefreshHostList()
     {
-        Debug.Log("Refreshing...");
+        //Debug.Log("Refreshing...");
         MasterServer.RequestHostList(registeredGameName);
         float TimeEnd = Time.time + refreshRequestLenght;
 
@@ -123,18 +123,18 @@ public class NetworkManager : MonoBehaviour {
         }
         if (hostData == null || hostData.Length == 0)
         {
-            Debug.Log("No active servers have been found.");
+            //Debug.Log("No active servers have been found.");
         }
         else
         {
-            Debug.Log(hostData.Length + " has been found.");
+            //Debug.Log(hostData.Length + " has been found.");
         }
     }
 
     public void OnNameChange()
     {
         InputSettings.name = enterName.text;
-        Debug.Log("Name Changed to: " + enterName.text);
+        //Debug.Log("Name Changed to: " + enterName.text);
     }
 
     public void LeaveLobby()
@@ -145,14 +145,14 @@ public class NetworkManager : MonoBehaviour {
 
     void OnPlayerDisconnected(NetworkPlayer player)
     {
-        Debug.Log("Clean up after player " + player);
+        //Debug.Log("Clean up after player " + player);
         Network.RemoveRPCs(player);
         Network.DestroyPlayerObjects(player);
     }
 
     void OnServerInitialized()
     {
-        Debug.Log("Server has been initialized" + Network.connections.Length);
+        //Debug.Log("Server has been initialized" + Network.connections.Length);
         Mainmenu.SetActive(false);
         gameLobby.SetActive(true);
         networkView.RPC("JoinLobby", RPCMode.AllBuffered, enterName.text);
@@ -160,24 +160,24 @@ public class NetworkManager : MonoBehaviour {
 
     void OnConnectedToServer()
     {
-        Debug.Log("Server joined" + Network.connections.Length);
         Mainmenu.SetActive(false);
         gameLobby.SetActive(true);
         networkView.RPC("JoinLobby", RPCMode.AllBuffered, enterName.text);
+        //Debug.Log("Server joined, on team: " + Network.connections.Length);
     }
 
     void OnMasterServerEvent(MasterServerEvent masterServerEvent)
     {
         if (masterServerEvent == MasterServerEvent.RegistrationSucceeded)
         {
-            Debug.Log("Registration succesfull" + Network.connections.Length);
+            //Debug.Log("Registration succesfull" + Network.connections.Length);
         }
     }
 
     [RPC]
     private void JoinLobby(string name)
     {
-        Debug.Log("" + players);
+        //Debug.Log("" + players);
         playersInLobby[players].gameObject.SetActive(true);
         playersInLobby[players].GetComponentInChildren<Text>().text = name;
         players++;
@@ -204,6 +204,6 @@ public class NetworkManager : MonoBehaviour {
     }
     private void SpawnPlayer()
     {
-        Network.Instantiate(playerPrefab, new Vector3(0, 1, 0), Quaternion.identity,0);
+        Network.Instantiate(playerPrefab, new Vector3(0, 1, 0), Quaternion.identity, 0);
     }
 }

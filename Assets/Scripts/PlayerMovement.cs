@@ -16,20 +16,13 @@ public class PlayerMovement : MonoBehaviour {
     private bool shouldMove;
 
     //Network
-    private Vector3 syncPos;
-    private Quaternion syncRot;
-    private float lastSynchronizationTime = 0f;
-    private float syncDelay = 0f;
-    private float syncTime = 0f;
     private Vector3 syncStartPosition = Vector3.zero;
     private Vector3 syncEndPosition = Vector3.zero;
     private Quaternion syncStartRotation = Quaternion.identity;
     private Quaternion syncEndRotation = Quaternion.identity;
-    public int sp = 0;
 
     void Awake()
     {
-        lastSynchronizationTime = Time.time;
         myRigidBody = GetComponent<Rigidbody>();
         myTransform = GetComponent<Transform>();
         targetPosition = myTransform.position;
@@ -59,11 +52,7 @@ public class PlayerMovement : MonoBehaviour {
             stream.Serialize(ref syncVelocity);
             stream.Serialize(ref syncRotation);
 
-            syncTime = 0f;
-            syncDelay = Time.time - lastSynchronizationTime;
-            lastSynchronizationTime = Time.time;
-
-            syncEndPosition = syncPosition + syncVelocity * syncDelay;
+            syncEndPosition = syncPosition;
             syncStartPosition = myRigidBody.position;
             syncEndRotation = syncRotation;
             syncStartRotation = myRigidBody.rotation;
@@ -116,15 +105,26 @@ public class PlayerMovement : MonoBehaviour {
 
         if (shouldMove)
         {
-            myTransform.position = Vector3.MoveTowards(myTransform.position, targetPosition, movementSpeed * Time.deltaTime);
-            myRigidBody.rotation = Quaternion.Lerp(myRigidBody.rotation, newRotation, rotationSpeed);
+            myRigidBody.position = Vector3.MoveTowards(myRigidBody.position, targetPosition, movementSpeed * Time.deltaTime);
+            myRigidBody.rotation = Quaternion.Slerp(myRigidBody.rotation, newRotation, rotationSpeed);
         }
     }
 
     private void SyncedMovement()
     {
-        syncTime += Time.deltaTime;
-        myTransform.position = Vector3.Lerp(myTransform.position, syncEndPosition, syncTime * 5);
-        myTransform.rotation = syncEndRotation;
+        //transform.position = syncEndPosition;
+        //transform.rotation = syncEndRotation;
+        myRigidBody.position = Vector3.Lerp(myRigidBody.position, syncEndPosition, Time.fixedDeltaTime * 10);
+        myRigidBody.rotation = Quaternion.Slerp(myRigidBody.rotation, syncEndRotation, Time.fixedDeltaTime * 10);
+    }
+
+    public void Push(Vector3 dir, int force, GameObject spell)
+    {
+        if (networkView.isMine)
+        {
+            Debug.Log("Dir" + dir + "force" + force);
+            myRigidBody.AddForce(dir * force);
+            Network.Destroy(spell);
+        }
     }
 }

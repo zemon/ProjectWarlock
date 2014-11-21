@@ -13,12 +13,15 @@ public class PlayerSpells : MonoBehaviour {
 
     // All the different spell prefabs
     public GameObject fireballPrefab;
-    public GameObject emptyPrefab;
+    public GameObject tempSpell;
 
     public LayerMask floorMask;
+    public int pTeam;
+    private PlayerMovement MovementScript;
 
     void Start()
     {
+        MovementScript = gameObject.GetComponent<PlayerMovement>();
         spellQ = fireballPrefab;
     }
 
@@ -30,16 +33,33 @@ public class PlayerSpells : MonoBehaviour {
             {
                 CastSpell(selectedSpellSlot);
             }
+            if (Input.GetMouseButtonDown(1) && selectedSpellSlot != "")
+            {
+                selectedSpellSlot = "";
+            }
 
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 selectedSpellSlot = "Q";
-                Debug.Log("Q selected");
             }
         }
 	}
 
-    void CastSpell(string spellSlot)
+    void OnTriggerEnter(Collider c)
+    {
+        if (networkView.isMine)
+        {
+            if (c.CompareTag("Spell") && c.gameObject.GetComponent<Spell>().team != pTeam)
+            {
+                Spell spellStats = c.gameObject.GetComponent<Spell>();
+                Vector3 hitPoint = c.ClosestPointOnBounds(transform.position);
+                Vector3 forceDir = (hitPoint - c.transform.position).normalized;
+                MovementScript.Push(forceDir, spellStats.force, c.gameObject);
+            }
+        }
+    }
+
+    private void CastSpell(string spellSlot)
     {
         Vector3 mouseDirection = new Vector3();
         Ray camRay = Camera.main.ScreenPointToRay(InputSettings.mousePosition);
@@ -47,15 +67,14 @@ public class PlayerSpells : MonoBehaviour {
 
         if (Physics.Raycast(camRay, out floorHit, Mathf.Infinity, floorMask))
         {
-            mouseDirection = floorHit.point - transform.position;
+            mouseDirection = (floorHit.point - transform.position).normalized;
             mouseDirection.y = 0;
         }
         switch (spellSlot)
         {
             // Spell slot Q
             case "Q":
-
-                Network.Instantiate(spellQ, transform.position, Quaternion.LookRotation(mouseDirection),0);
+                networkView.RPC("SpawnSpell", RPCMode.AllBuffered, mouseDirection, pTeam, PlayerStats.speedFireball, PlayerStats.forceFireball, PlayerStats.rangeFireball);
                 Debug.Log("Q fired" + mouseDirection);
                 selectedSpellSlot = "";
                 break;
@@ -64,5 +83,16 @@ public class PlayerSpells : MonoBehaviour {
                 Debug.Log("Spell slot not in use: " + spellSlot);
                 break;
         }
+    }
+
+    [RPC]
+    private void SpawnSpell(Vector3 dir, int team, int speed, int force, int range)
+    {
+        tempSpell = fireballPrefab;
+        tempSpell.GetComponent<Spell>().team = team;
+        tempSpell.GetComponent<Spell>().force = force;
+        tempSpell.GetComponent<Spell>().speed = speed;
+        tempSpell.GetComponent<Spell>().range = range;
+        Instantiate(tempSpell, transform.position, Quaternion.LookRotation(dir));
     }
 }
