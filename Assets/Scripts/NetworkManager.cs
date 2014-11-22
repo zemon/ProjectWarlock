@@ -53,7 +53,7 @@ public class NetworkManager : MonoBehaviour {
             RefreshPlayerLobby();
             gameLobby.SetActive(false);
             Mainmenu.SetActive(false);
-            SpawnPlayer();
+            //SpawnPlayer();
             Screen.showCursor = false;
             Screen.lockCursor = true;
         }

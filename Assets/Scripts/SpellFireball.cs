@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Spell : MonoBehaviour {
+public class SpellFireball : MonoBehaviour {
 
     private int speed;
     private int force;
@@ -60,7 +60,7 @@ public class Spell : MonoBehaviour {
                 networkView.RPC("DestroySelf", RPCMode.Server, GetComponent<NetworkView>().viewID);
             }
         }
-        else if (c.CompareTag("Spell") && c.GetComponent<Spell>().team != team)
+        else if (c.CompareTag("Spell") && c.GetComponent<SpellFireball>().team != team)
         {
             if (Network.isServer)
             {
