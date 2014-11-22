@@ -22,7 +22,6 @@ public class PlayerSpells : MonoBehaviour {
     void Start()
     {
         //MovementScript = gameObject.GetComponent<PlayerMovement>();
-
         spellQ = fireballPrefab;
     }
 
@@ -45,12 +44,6 @@ public class PlayerSpells : MonoBehaviour {
             }
         }
 	}
-
-    [RPC]
-    private void SendTeam(int t)
-    {
-        GetComponent<PlayerSpells>().pTeam = t;
-    }
 
     private void CastSpell(string spellSlot)
     {
@@ -83,7 +76,7 @@ public class PlayerSpells : MonoBehaviour {
     private void SpawnSpell(NetworkViewID viewID, Vector3 dir, int team, int speed, int force, int range)
     {
         tempSpell = spellQ;
-        tempSpell.GetComponent<SpellFireball>().team = team;
+        tempSpell.GetComponent<Spell>().team = team;
         NetworkView nView;
         nView = tempSpell.GetComponent<NetworkView>();
         nView.viewID = viewID;
