@@ -17,11 +17,11 @@ public class PlayerSpells : MonoBehaviour {
 
     public LayerMask floorMask;
     public int pTeam;
-    private PlayerMovement MovementScript;
+    //private PlayerMovement MovementScript;
 
     void Start()
     {
-        MovementScript = gameObject.GetComponent<PlayerMovement>();
+        //MovementScript = gameObject.GetComponent<PlayerMovement>();
         spellQ = fireballPrefab;
     }
 
@@ -45,20 +45,6 @@ public class PlayerSpells : MonoBehaviour {
         }
 	}
 
-    void OnTriggerEnter(Collider c)
-    {
-        if (networkView.isMine)
-        {
-            if (c.CompareTag("Spell") && c.gameObject.GetComponent<Spell>().team != pTeam)
-            {
-                Spell spellStats = c.gameObject.GetComponent<Spell>();
-                Vector3 hitPoint = c.ClosestPointOnBounds(transform.position);
-                Vector3 forceDir = (hitPoint - c.transform.position).normalized;
-                MovementScript.Push(forceDir, spellStats.force, c.gameObject);
-            }
-        }
-    }
-
     private void CastSpell(string spellSlot)
     {
         Vector3 mouseDirection = new Vector3();
@@ -74,7 +60,8 @@ public class PlayerSpells : MonoBehaviour {
         {
             // Spell slot Q
             case "Q":
-                networkView.RPC("SpawnSpell", RPCMode.AllBuffered, mouseDirection, pTeam, PlayerStats.speedFireball, PlayerStats.forceFireball, PlayerStats.rangeFireball);
+                NetworkViewID viewID = Network.AllocateViewID();
+                networkView.RPC("SpawnSpell", RPCMode.AllBuffered, viewID, mouseDirection, pTeam, PlayerStats.speedFireball, PlayerStats.forceFireball, PlayerStats.rangeFireball);
                 Debug.Log("Q fired" + mouseDirection);
                 selectedSpellSlot = "";
                 break;
@@ -86,13 +73,13 @@ public class PlayerSpells : MonoBehaviour {
     }
 
     [RPC]
-    private void SpawnSpell(Vector3 dir, int team, int speed, int force, int range)
+    private void SpawnSpell(NetworkViewID viewID, Vector3 dir, int team, int speed, int force, int range)
     {
-        tempSpell = fireballPrefab;
+        tempSpell = spellQ;
         tempSpell.GetComponent<Spell>().team = team;
-        tempSpell.GetComponent<Spell>().force = force;
-        tempSpell.GetComponent<Spell>().speed = speed;
-        tempSpell.GetComponent<Spell>().range = range;
+        NetworkView nView;
+        nView = tempSpell.GetComponent<NetworkView>();
+        nView.viewID = viewID;
         Instantiate(tempSpell, transform.position, Quaternion.LookRotation(dir));
     }
 }

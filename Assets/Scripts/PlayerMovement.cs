@@ -16,9 +16,9 @@ public class PlayerMovement : MonoBehaviour {
     private bool shouldMove;
 
     //Network
-    private Vector3 syncStartPosition = Vector3.zero;
+//    private Vector3 syncStartPosition = Vector3.zero;
     private Vector3 syncEndPosition = Vector3.zero;
-    private Quaternion syncStartRotation = Quaternion.identity;
+//    private Quaternion syncStartRotation = Quaternion.identity;
     private Quaternion syncEndRotation = Quaternion.identity;
 
     void Awake()
@@ -53,9 +53,9 @@ public class PlayerMovement : MonoBehaviour {
             stream.Serialize(ref syncRotation);
 
             syncEndPosition = syncPosition;
-            syncStartPosition = myRigidBody.position;
+            //syncStartPosition = myRigidBody.position;
             syncEndRotation = syncRotation;
-            syncStartRotation = myRigidBody.rotation;
+            //     syncStartRotation = myRigidBody.rotation;
         }
     }
 
@@ -114,17 +114,16 @@ public class PlayerMovement : MonoBehaviour {
     {
         //transform.position = syncEndPosition;
         //transform.rotation = syncEndRotation;
-        myRigidBody.position = Vector3.Lerp(myRigidBody.position, syncEndPosition, Time.fixedDeltaTime * 10);
-        myRigidBody.rotation = Quaternion.Slerp(myRigidBody.rotation, syncEndRotation, Time.fixedDeltaTime * 10);
+        myRigidBody.position = Vector3.Lerp(myTransform.position, syncEndPosition, Time.fixedDeltaTime * 20);
+        myRigidBody.rotation = Quaternion.Slerp(myTransform.rotation, syncEndRotation, Time.fixedDeltaTime * 20);
     }
 
-    public void Push(Vector3 dir, int force, GameObject spell)
+    public void Push(Vector3 dir, int force)
     {
         if (networkView.isMine)
         {
-            Debug.Log("Dir" + dir + "force" + force);
             myRigidBody.AddForce(dir * force);
-            Network.Destroy(spell);
+            Debug.Log("pushed: " + dir);
         }
     }
 }
