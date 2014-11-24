@@ -235,7 +235,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: faed4b5d92595da4c9318b703cc40890, type: 3}
+  m_Script: {fileID: 11500000, guid: 76a65e0c4681eb9418bcbb95610dfbbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   floorMask:
@@ -251,15 +251,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc15377a37962594aa2e8eb5dcb786a7, type: 3}
+  m_Script: {fileID: 11500000, guid: 32df6a78e3f049c489ec496616dc9cd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireballPrefab: {fileID: 100000, guid: e71cd755c5b1b5a4bb845e58b7c6e233, type: 2}
+  fireballPrefab: {fileID: 100000, guid: 6abb8098bb982ea4a8b998b258758420, type: 2}
+  homingPrefab: {fileID: 100000, guid: 06dfefded7e3ca44a84eb2868b2b95f0, type: 2}
   tempSpell: {fileID: 0}
   floorMask:
     serializedVersion: 2
     m_Bits: 256
-  pTeam: 0
+  team: 0
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -268,7 +269,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 100004}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db15a2720f659d6458b1c08c69641ed9, type: 3}
+  m_Script: {fileID: 11500000, guid: acdea62781f8d6f4e80984339df18f5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!124 &12400000

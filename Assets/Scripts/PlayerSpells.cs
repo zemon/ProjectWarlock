@@ -13,6 +13,7 @@ public class PlayerSpells : MonoBehaviour {
 
     // All the different spell prefabs
     public GameObject fireballPrefab;
+    public GameObject homingPrefab;
     public GameObject tempSpell;
 
     public LayerMask floorMask;
@@ -21,6 +22,7 @@ public class PlayerSpells : MonoBehaviour {
     void Start()
     {
         spellQ = fireballPrefab;
+        spellW = homingPrefab;
     }
 
 	void Update ()
@@ -40,6 +42,10 @@ public class PlayerSpells : MonoBehaviour {
             {
                 selectedSpellSlot = "Q";
             }
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                selectedSpellSlot = "W";
+            }
         }
 	}
 
@@ -54,13 +60,21 @@ public class PlayerSpells : MonoBehaviour {
             mouseDirection = (floorHit.point - transform.position).normalized;
             mouseDirection.y = 0;
         }
+        NetworkViewID viewID;
         switch (spellSlot)
         {
             // Spell slot Q
             case "Q":
-                NetworkViewID viewID = Network.AllocateViewID();
-                networkView.RPC("SpawnSpell", RPCMode.AllBuffered, viewID, mouseDirection, team, PlayerStats.speedFireball, PlayerStats.forceFireball, PlayerStats.rangeFireball);
+                viewID = Network.AllocateViewID();
+                networkView.RPC("SpawnSpell", RPCMode.AllBuffered, viewID, mouseDirection, team, spellSlot);
                 Debug.Log("Q fired" + mouseDirection);
+                selectedSpellSlot = "";
+                break;
+                // Spell slot W
+            case "W":
+                viewID = Network.AllocateViewID();
+                networkView.RPC("SpawnSpell", RPCMode.AllBuffered, viewID, mouseDirection, team, spellSlot);
+                Debug.Log("W fired" + mouseDirection);
                 selectedSpellSlot = "";
                 break;
 
@@ -71,10 +85,22 @@ public class PlayerSpells : MonoBehaviour {
     }
 
     [RPC]
-    private void SpawnSpell(NetworkViewID viewID, Vector3 dir, int team, int speed, int force, int range)
+    private void SpawnSpell(NetworkViewID viewID, Vector3 dir, int team, string spellSlot)
     {
-        tempSpell = spellQ;
-        tempSpell.GetComponent<Fireball>().team = team;
+        switch(spellSlot)
+        {
+            case "Q":
+                tempSpell = spellQ;
+                break;
+            case "W":
+                tempSpell = spellW;
+                break;
+            default:
+                Debug.Log("Spell slot not in use: " + selectedSpellSlot);
+                break;
+        }
+
+        tempSpell.GetComponent<SpellVariables>().team = team;
         NetworkView nView;
         nView = tempSpell.GetComponent<NetworkView>();
         nView.viewID = viewID;

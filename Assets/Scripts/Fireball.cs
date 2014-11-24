@@ -7,7 +7,7 @@ public class Fireball : MonoBehaviour {
     private int force;
     private int range;
 
-    public int team;
+
 
 	// Use this for initialization
 	void Start ()
@@ -16,7 +16,7 @@ public class Fireball : MonoBehaviour {
         force = PlayerStats.forceFireball;
         range = PlayerStats.rangeFireball;
 
-        ChangeColor(team);
+
         Destroy(gameObject,range);
 	}
 	
@@ -26,31 +26,12 @@ public class Fireball : MonoBehaviour {
         transform.position += transform.forward * speed * Time.deltaTime;
 	}
 
-    private void ChangeColor(int t)
-    {
-        switch (t)
-        {
-            case 0:
-                gameObject.renderer.material.color = Color.green;
-                break;
-            case 1:
-                gameObject.renderer.material.color = Color.blue;
-                break;
-            case 2:
-                gameObject.renderer.material.color = Color.red;
-                break;
-            case 3:
-                gameObject.renderer.material.color = Color.yellow;
-                break;
-            default:
-                break;
-        }
-    }
+
 
     void OnTriggerEnter(Collider c)
     {
         Debug.Log("Trigger");
-        if (c.CompareTag("Player") && c.GetComponent<PlayerSpells>().team != team)
+        if (c.CompareTag("Player") && c.GetComponent<PlayerSpells>().team != this.GetComponent<SpellVariables>().team)
         {
             if (!networkView.isMine)
             {
