@@ -16,12 +16,10 @@ public class PlayerSpells : MonoBehaviour {
     public GameObject tempSpell;
 
     public LayerMask floorMask;
-    public int pTeam;
-    //private PlayerMovement MovementScript;
+    public int team;
 
     void Start()
     {
-        //MovementScript = gameObject.GetComponent<PlayerMovement>();
         spellQ = fireballPrefab;
     }
 
@@ -61,7 +59,7 @@ public class PlayerSpells : MonoBehaviour {
             // Spell slot Q
             case "Q":
                 NetworkViewID viewID = Network.AllocateViewID();
-                networkView.RPC("SpawnSpell", RPCMode.AllBuffered, viewID, mouseDirection, pTeam, PlayerStats.speedFireball, PlayerStats.forceFireball, PlayerStats.rangeFireball);
+                networkView.RPC("SpawnSpell", RPCMode.AllBuffered, viewID, mouseDirection, team, PlayerStats.speedFireball, PlayerStats.forceFireball, PlayerStats.rangeFireball);
                 Debug.Log("Q fired" + mouseDirection);
                 selectedSpellSlot = "";
                 break;
@@ -76,7 +74,7 @@ public class PlayerSpells : MonoBehaviour {
     private void SpawnSpell(NetworkViewID viewID, Vector3 dir, int team, int speed, int force, int range)
     {
         tempSpell = spellQ;
-        tempSpell.GetComponent<Spell>().team = team;
+        tempSpell.GetComponent<Fireball>().team = team;
         NetworkView nView;
         nView = tempSpell.GetComponent<NetworkView>();
         nView.viewID = viewID;

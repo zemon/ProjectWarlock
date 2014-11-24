@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Spell : MonoBehaviour {
+public class Fireball : MonoBehaviour {
 
     private int speed;
     private int force;
@@ -50,7 +50,7 @@ public class Spell : MonoBehaviour {
     void OnTriggerEnter(Collider c)
     {
         Debug.Log("Trigger");
-        if (c.CompareTag("Player") && c.GetComponent<PlayerSpells>().pTeam != team)
+        if (c.CompareTag("Player") && c.GetComponent<PlayerSpells>().team != team)
         {
             if (!networkView.isMine)
             {
@@ -58,14 +58,6 @@ public class Spell : MonoBehaviour {
                 Vector3 dir = (c.ClosestPointOnBounds(transform.position) - transform.position).normalized;
                 c.GetComponent<PlayerMovement>().Push(dir, force);
                 networkView.RPC("DestroySelf", RPCMode.Server, GetComponent<NetworkView>().viewID);
-            }
-        }
-        else if (c.CompareTag("Spell") && c.GetComponent<Spell>().team != team)
-        {
-            if (Network.isServer)
-            {
-                Network.Destroy(c.GetComponent<NetworkView>().viewID);
-                Network.Destroy(GetComponent<NetworkView>().viewID);
             }
         }
         else if (c.CompareTag("Pushable"))
