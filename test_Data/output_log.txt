@@ -19,23 +19,11 @@ XInput1_3.dll not found.
 <RI> Input initialized.
 Platform assembly: C:\Users\Mikkel Djurhuus\Documents\GitHub\ProjectWarlock\test_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Mikkel Djurhuus\Documents\GitHub\ProjectWarlock\test_Data\Managed\System.dll (this message is harmless)
-Q fired(-1.0, 0.0, 0.2)
+TEsting setup
  
 (Filename: C:/BuildAgent/work/d63dfc6385190b60/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
 
-Trigger
- 
-(Filename: C:/BuildAgent/work/d63dfc6385190b60/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
-
-Trigger
- 
-(Filename: C:/BuildAgent/work/d63dfc6385190b60/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
-
-Q fired(-1.0, 0.0, 0.2)
- 
-(Filename: C:/BuildAgent/work/d63dfc6385190b60/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
-
-Trigger
+Q fired(-0.7, 0.0, 0.7)
  
 (Filename: C:/BuildAgent/work/d63dfc6385190b60/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
 
@@ -52,14 +40,6 @@ Trigger
 (Filename: C:/BuildAgent/work/d63dfc6385190b60/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
 
 Trigger
- 
-(Filename: C:/BuildAgent/work/d63dfc6385190b60/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
-
-player hit
- 
-(Filename: C:/BuildAgent/work/d63dfc6385190b60/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
-
-pushed: (0.7, 0.0, -0.7)
  
 (Filename: C:/BuildAgent/work/d63dfc6385190b60/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
 
